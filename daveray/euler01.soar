@@ -1,0 +1,87 @@
+# Project Euler Problem 1
+#
+# If we list all the natural numbers below 10 that are multiples of 3 or 5
+# we get 3, 5, 6 and 9. The sum of these multiples is 23.
+#
+# Find the sum of all the multiples of 3 or 5 below 1000.
+#
+# solution by dave ray
+# daveray (at sign) gmail (period) com
+
+watch 0
+
+sp {euler01*propose*init
+  (state <s> ^superstate nil
+            -^name)
+-->
+  (<s> ^operator.name init)
+}
+
+sp {euler01*apply*init
+  (state <s> ^operator.name init)
+-->
+  (<s> ^name euler01
+       ^current 0
+       ^sum 0
+       ^stop-at 1000)
+}
+
+sp {euler01*detect-halt-condition
+  (state <s> ^name euler01
+             ^stop-at <stop-at>
+             ^current <stop-at>
+             ^sum <sum>)
+-->
+  (write (crlf) |The sum of multiples of 3 or 5 below 1000 is: | <sum>)
+  (halt)
+}
+
+sp {euler01*elaborate*modulos
+  "Elaborate current module 3 and 5 on the state"
+  (state <s> ^name euler01
+             ^current <current>)
+-->
+  (<s> ^modulo-3 (mod <current> 3)
+       ^modulo-5 (mod <current> 5))
+}
+
+sp {euler01*propose*next
+  "If we're not done yet, propose taking the next step"
+  (state <s> ^name euler01
+             ^stop-at <stop-at>
+             ^current < <stop-at>)
+-->
+  (<s> ^operator.name next)
+}
+
+sp {euler01*apply*next-multiple-of-3
+  "If it's a multiple of 3, add it to the sum"
+  (state <s> ^operator.name next
+             ^current <current>
+             ^modulo-3 0
+             ^sum <sum>)
+-->
+  (<s> ^sum (+ <sum> <current>)
+       ^sum <sum> -)
+}
+
+sp {euler01*apply*next-multiple-of-5
+  "If it's a multiple of 5, add it to the sum"
+  (state <s> ^operator.name next
+             ^current <current>
+             ^modulo-5 0
+             ^sum <sum>)
+-->
+  (<s> ^sum (+ <sum> <current>)
+       ^sum <sum> -)
+}
+
+sp {euler01*apply*next-increment
+  "Increment to the next step"
+  (state <s> ^operator.name next
+             ^current <current>)
+-->
+  (<s> ^current (+ <current> 1)
+       ^current <current> -)
+}
+
