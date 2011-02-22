@@ -1,3 +1,9 @@
+# Generates part of the right hand side for the data production
+# for Project Euler Problem 11 in Soar
+#
+# By Jonathan Voigt <voigtjr@gmail.com>
+#
+
 def p11
     IO.readlines("data11.txt").each_with_index do |x, i|
         x.split.each_with_index do |y, j|
@@ -24,3 +30,4 @@ def p11
 end
 
 p11
+
